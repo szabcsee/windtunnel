@@ -1,0 +1,17 @@
+.main-content {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+.login-form {
+    padding: 20px 0px;
+}
+.card.card-nav-tabs .header h2 {
+    font-size: 1.4em;
+    margin: 5px 10px;
+}
+.card.card-nav-tabs .header h2 i {
+    vertical-align: top;
+}
+.card .header {
+    padding: 10px;
+}

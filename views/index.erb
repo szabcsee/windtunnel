@@ -1,0 +1,84 @@
+
+<div class="col-sm-12">
+  <div class="col-md-3">
+    <div class="card card-nav-tabs">
+      <div class="header header-success">
+        <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+          <h2><i class="material-icons">card_giftcard</i> New gift card</h2>
+      </div>
+      <div class="content">
+        <div class="tab-content text-center">
+
+            <form action="/card" method="POST" accept-charset="utf-8" class="form">
+              <div class="col-sm-offset-1 col-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="material-icons">confirmation_number</i>
+                  </span>
+                  <input name="booking_code" class="form-control" placeholder="Booking code">
+                </div>
+              </div>
+              <div class="col-sm-offset-1 col-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="material-icons">attach_money</i>
+                  </span>
+                  <input name="amount" class="form-control" placeholder="Amount">
+                </div>
+              </div>
+              <div class="col-sm-offset-1 col-sm-9">
+                <input type="submit" class="btn btn-success"></input>
+              </div>
+            </form>
+
+        </div>
+      </div>
+    </div>
+    <!-- End Tabs with icons on Card -->
+
+  </div>
+  <div class="col-sm-9">
+      <div class="main-content">
+        <table class="table">
+          <thead>
+          <tr>
+            <th class="text-center">#id</th>
+            <th>Serial number</th>
+            <th>Booking code</th>
+            <th>Amount</th>
+            <th class="text-right">Expiry date</th>
+            <th class="text-right">Created at</th>
+            <th>Created by</th>
+            <th>  </th>
+          </tr>
+          </thead>
+          <tbody>
+          <% if @cards %>
+            <% @cards.each do |card| %>
+            <tr>
+              <td class="text-center"><%= card.id %></td>
+              <td><%= card.serial_number %></td>
+              <td><%= card.booking_code%></td>
+              <td><%= card.amount %></td>
+              <td class="text-right"><%= card.expiry_date %></td>
+              <td class="text-right"><%= card.created_at.strftime('%Y-%m-%d') %></td>
+              <td><%= card.user.username %></td>
+              <td class="td-actions text-right">
+                <button type="button" rel="tooltip" title="View Profile" class="btn btn-info btn-simple btn-xs">
+                  <i class="fa fa-print"></i>
+                </button>
+              </td>
+            </tr>
+            <% end %>
+          <% end %>
+          </tbody>
+        </table>
+        <ul class="pagination pagination-primary">
+          <li <%= 0 === @current_page ? "class='active'" : "" %>><a href="/">0</a></li>
+          <% for i in 1..@total_pages %>
+            <li <%= i === @current_page ? "class='active'" : "" %>><a href="?page=<%= i %>"><%= i %></a></li>
+          <% end %>
+        </ul>
+      </div>
+  </div>
+</div>
