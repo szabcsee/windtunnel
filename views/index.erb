@@ -21,6 +21,14 @@
               <div class="col-sm-offset-1 col-sm-10">
                 <div class="input-group">
                   <span class="input-group-addon">
+                    <i class="material-icons">date_range</i>
+                  </span>
+                  <input name="expiry_date" class="datepicker form-control"  data-date-format="yyyy/mm/dd" value="<%= @expiry_date %>"/>
+                </div>
+              </div>
+              <div class="col-sm-offset-1 col-sm-10">
+                <div class="input-group">
+                  <span class="input-group-addon">
                     <i class="material-icons">attach_money</i>
                   </span>
                   <input name="amount" class="form-control" placeholder="Amount">
@@ -49,7 +57,7 @@
             <th class="text-right">Expiry date</th>
             <th class="text-right">Created at</th>
             <th>Created by</th>
-            <th>  </th>
+            <th> <a href="/export/cards"><i class="material-icons">import_export</i> Export</a></th>
           </tr>
           </thead>
           <tbody>
@@ -64,9 +72,8 @@
               <td class="text-right"><%= card.created_at.strftime('%Y-%m-%d') %></td>
               <td><%= card.user.username %></td>
               <td class="td-actions text-right">
-                <button type="button" rel="tooltip" title="View Profile" class="btn btn-info btn-simple btn-xs">
-                  <i class="fa fa-print"></i>
-                </button>
+                <a href="/print/<%= card.id %>"><i class="fa fa-print"></i></a>
+
               </td>
             </tr>
             <% end %>
@@ -78,6 +85,7 @@
           <% for i in 1..@total_pages %>
             <li <%= i === @current_page ? "class='active'" : "" %>><a href="?page=<%= i %>"><%= i %></a></li>
           <% end %>
+          <li><a href="?total=true">Show All</a></li>
         </ul>
       </div>
   </div>

@@ -1,6 +1,10 @@
 # app.rb
 require "sinatra"
 require "sinatra/activerecord"
+require "prawn"
+require "prawn/measurements"
+require "prawn/measurement_extensions"
+require "csv"
 
 set :database, "sqlite3:myblogdb.sqlite3"
 
@@ -33,10 +37,13 @@ get '/' do
 
 	if params[:page]
 		@current_page = params[:page].to_i
-		@cards = Card.joins(:user).offset(@current_page * 10).limit(10)
+		@cards = Card.joins(:user).order('id DESC').offset(@current_page * 10).limit(10)
+  elsif params[:total]
+     @cards = Card.joins(:user).all.order('id DESC')
   else
-		@cards = Card.joins(:user).limit(10)
+		@cards = Card.joins(:user).order('id DESC').limit(10)
   end
+  @expiry_date = expiry_date.strftime('%Y/%m/%d')
 	erb :index, :locals => {:name => @current_user}
 end
 
@@ -45,6 +52,11 @@ get '/login' do
 		redirect('/')
 	end
   erb :login, :locals => {:name => @current_user}
+end
+
+get '/print/:id' do
+  @card = Card.find(params[:id])
+  generate_pdf(@card)
 end
 
 post '/login' do
@@ -65,11 +77,12 @@ post '/card' do
 	@card = Card.new
   @card.amount = params[:amount].to_i
   @card.booking_code = params[:booking_code].to_s
-  @card.expiry_date = expiry_date
+  @card.expiry_date = params[:expiry_date]
   @card.user_id = User.find_by_username(session[:current_user]).id
   @card.serial_number = generate_serial_number(Card.last.id).to_s
   @card.save
-	redirect '/'
+	generate_pdf(@card)
+
 end
 
 # show post
@@ -91,6 +104,19 @@ delete '/card/:id' do
 	@card = Card.find(params[:id])
 	@card.destroy
 	redirect '/'
+end
+
+get '/export/cards' do
+	data = Card.all.joins(:user)
+	content_type 'application/csv; encoding=utf-8;'
+	attachment "cards-export.csv"
+	csv_string = ""
+	csv_string = CSV.generate do |csv|
+		csv << ["Id","Serial number","Booking code","Amount","Expiry date","Created at","User"]
+		data.each do |card|
+			csv << ["#{card.id}","#{card.serial_number}","#{card.booking_code}","#{card.amount}","#{card.expiry_date.to_s}","#{card.created_at.to_s}","#{card.user.username}"]
+		end
+	end
 end
 
 

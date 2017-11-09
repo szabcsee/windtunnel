@@ -1,3 +1,12 @@
+body {
+    background: #E8E8E8;
+}
+a, a:hover, a:focus {
+    color: #B90504;
+}
+label {
+    color: #B90504;
+}
 .main-content {
     background-color: #FFFFFF;
     border-radius: 10px;
@@ -14,4 +23,20 @@
 }
 .card .header {
     padding: 10px;
+}
+.main-content ul.pagination {
+    margin-left: 20px;
+}
+nav.navbar.navbar-custom {
+    background: #242424;
+}
+.card .header-success {
+    background: linear-gradient(30deg, #990100, #B90504);
+}
+.btn.btn-success {
+    background: #B90504;
+}
+.pagination > .active > a {
+    background-color: #990100;
+    border-color: #B90504;
 }
