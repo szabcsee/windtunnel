@@ -5,8 +5,8 @@ require "prawn"
 require "prawn/measurements"
 require "prawn/measurement_extensions"
 require "csv"
-
-set :database, "sqlite3:myblogdb.sqlite3"
+require "pg"
+require "heroku"
 
 require "./models"
 require "./helpers"
@@ -23,6 +23,24 @@ end
 configure do
 	enable :sessions
 end
+
+configure :development do
+	set :database, "sqlite3:myblogdb.sqlite3"
+	set :show_exceptions, true
+end
+configure :production do
+	db = URI.parse(ENV['DATABASE_URL'] || 'postgres:///localhost/mydb')
+
+	ActiveRecord::Base.establish_connection(
+			:adapter  => db.scheme == 'postgres' ? 'postgresql' : db.scheme,
+			:host     => db.host,
+			:username => db.user,
+			:password => db.password,
+			:database => db.path[1..-1],
+			:encoding => 'utf8'
+	)
+end
+
 
 before do
     @current_user = session[:current_user] ? session[:current_user] : "not logged in"
