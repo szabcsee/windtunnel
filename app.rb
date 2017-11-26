@@ -88,11 +88,12 @@ end
 # create card
 post '/card' do
 	@card = Card.new
+  @lastCardId = Card.last ? Card.last.id : 0
   @card.amount = params[:amount].to_i
   @card.booking_code = params[:booking_code].to_s
   @card.expiry_date = params[:expiry_date]
   @card.user_id = User.find_by_username(session[:current_user]).id
-  @card.serial_number = generate_serial_number(Card.last.id).to_s
+  @card.serial_number = generate_serial_number(@lastCardId).to_s
   @card.save
 	generate_pdf(@card)
 
