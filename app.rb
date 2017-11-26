@@ -6,7 +6,6 @@ require "prawn/measurements"
 require "prawn/measurement_extensions"
 require "csv"
 require "pg"
-require "heroku"
 
 require "./models"
 require "./helpers"
