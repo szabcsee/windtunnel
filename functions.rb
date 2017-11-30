@@ -19,8 +19,8 @@ def generate_pdf(card)
   pdf.font "Asap"
   pdf.draw_text card.amount.to_s + ".-", :at => [330,210], :size => 120, :style => :bold_italic
   pdf.fill_color "38363a"
-  pdf.draw_text card.expiry_date, :at => [200,120], :size => 36, :style => :bold
-  pdf.draw_text card.booking_code, :at => [200,45], :size => 36, :style => :bold
+  pdf.draw_text card.expiry_date, :at => [330,120], :size => 36, :style => :bold
+  pdf.draw_text card.booking_code, :at => [330,45], :size => 36, :style => :bold
   pdf.fill_color "38363a"
   pdf.draw_text card.serial_number, :at => [5,5], :size => 12
 
