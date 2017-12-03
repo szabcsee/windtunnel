@@ -95,7 +95,7 @@ post '/card' do
   @card.user_id = User.find_by_username(session[:current_user]).id
   @card.serial_number = generate_serial_number(@lastCardId).to_s
   @card.save
-	generate_pdf(@card)
+  redirect '/'
 
 end
 
