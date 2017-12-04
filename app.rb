@@ -45,8 +45,15 @@ get '/' do
   if !session[:current_user]
     redirect('/login')
   end
+
 	@total_pages 	= Card.all.size/10.to_f.ceil
   @current_page = 0
+  @new_card     = nil
+
+  if session[:new_card]
+    @new_card = session[:new_card]
+    session[:new_card] = nil
+  end
 
 	if params[:page]
 		@current_page = params[:page].to_i
@@ -57,7 +64,7 @@ get '/' do
 		@cards = Card.joins(:user).order('id DESC').limit(10)
   end
   @expiry_date = expiry_date.strftime('%Y/%m/%d')
-	erb :index, :locals => {:name => @current_user}
+	erb :index, :locals => {:name => @current_user, :new_card => @new_card}
 end
 
 get '/login' do
@@ -95,6 +102,7 @@ post '/card' do
   @card.user_id = User.find_by_username(session[:current_user]).id
   @card.serial_number = generate_serial_number(@lastCardId).to_s
   @card.save
+  session[:new_card] = Card.last.id
   redirect '/'
 
 end

@@ -11,7 +11,7 @@
   end
   
   def generate_serial_number(last_id)
-    time = Time.now.year.to_s  + Time.now.month.to_s + Time.now.day.to_s + Time.now.hour.to_s + Time.now.min.to_s + last_id.to_s
+    time = Time.now.year.to_s  + Time.now.month.to_s + Time.now.day.to_s + Time.now.hour.to_s + Time.now.min.to_s + (last_id + 1).to_s
     serial_number = time + random_numeric(3).to_s
     
     if Card.find_by_serial_number(serial_number)

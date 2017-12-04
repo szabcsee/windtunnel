@@ -40,3 +40,7 @@ nav.navbar.navbar-custom {
     background-color: #990100;
     border-color: #B90504;
 }
+.new-card {
+    font-weight: bold;
+    color: green;
+}

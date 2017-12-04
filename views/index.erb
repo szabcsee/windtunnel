@@ -63,7 +63,11 @@
           <tbody>
           <% if @cards %>
             <% @cards.each do |card| %>
-            <tr>
+            <% if new_card && new_card === card.id %>
+              <tr class="new-card">
+                  <% else %>
+              <tr>
+                  <% end %>
               <td class="text-center"><%= card.id %></td>
               <td><%= card.serial_number %></td>
               <td><%= card.booking_code%></td>
