@@ -35,7 +35,7 @@
                 </div>
               </div>
               <div class="col-sm-offset-1 col-sm-9">
-                <input type="submit" class="btn btn-success"></input>
+                <input type="submit" class="btn btn-success"/>
               </div>
             </form>
 
@@ -89,7 +89,7 @@
           <% for i in 1..@total_pages %>
             <li <%= i === @current_page ? "class='active'" : "" %>><a href="?page=<%= i %>"><%= i %></a></li>
           <% end %>
-          <li><a href="?total=true">Show All</a></li>
+          <li><a href="/">Show All</a></li>
         </ul>
       </div>
   </div>

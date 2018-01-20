@@ -23,6 +23,10 @@ configure do
 	enable :sessions
 end
 
+configure :development do
+	set :database, "sqlite3:myblogdb.sqlite3"
+end
+
 configure :production do
 	db = URI.parse(ENV['DATABASE_URL'] || 'postgres:///localhost/mydb')
 
@@ -39,6 +43,8 @@ end
 
 before do
     @current_user = session[:current_user] ? session[:current_user] : "not logged in"
+    @message = session[:message] ? session[:message] : nil
+    session[:message] = nil
 end
 # index cards
 get '/' do
@@ -48,12 +54,12 @@ get '/' do
 
 	@total_pages 	= Card.all.size/10.to_f.ceil
   @current_page = 0
-  @new_card     = nil
+	@new_card = nil
 
-  if session[:new_card]
-    @new_card = session[:new_card]
-    session[:new_card] = nil
-  end
+	if session[:new_card]
+		@new_card = session[:new_card]
+		session[:new_card] = nil
+	end
 
 	if params[:page]
 		@current_page = params[:page].to_i
@@ -64,14 +70,35 @@ get '/' do
 		@cards = Card.joins(:user).order('id DESC').limit(10)
   end
   @expiry_date = expiry_date.strftime('%Y/%m/%d')
-	erb :index, :locals => {:name => @current_user, :new_card => @new_card}
+	erb :index, :locals => {:name => @current_user, :new_card => @new_card, :message => @message}
+end
+
+get '/search' do
+  @total_pages = 1
+	if !session[:current_user]
+		redirect('/login')
+  end
+  if params[:searchproperty] === 'all'
+  	@cards = Card.all
+  elsif params[:searchproperty] === 'expiry_date'
+		@cards = Card.where("expiry_date = ?", Date.parse(params[:searchvalue])).limit(nil)
+  else
+		@cards = Card.where("#{params[:searchproperty]} = ?", params[:searchvalue]).limit(nil)
+  end
+
+  if @cards.count == 0
+      session[:message] = 'No search result found.'
+      redirect('/')
+  else
+			erb :index, :locals => {:name => @current_user, :new_card => nil, :message => @message}
+  end
 end
 
 get '/login' do
 	if session[:current_user]
 		redirect('/')
 	end
-  erb :login, :locals => {:name => @current_user}
+  erb :login, :locals => {:name => @current_user, :message => @message}
 end
 
 get '/print/:id' do
@@ -84,6 +111,10 @@ post '/login' do
   if @user && @user.password == params[:password]
     session[:current_user] = @user.username
     redirect('/')
+  else
+    session[:current_user] = nil
+		@message = "Invalid password for user: #{params[:username]}."
+		erb :login, :locals => {:message => @message}
   end
 end
 

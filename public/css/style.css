@@ -44,3 +44,14 @@ nav.navbar.navbar-custom {
     font-weight: bold;
     color: green;
 }
+.search-form {
+     margin: 10px 0px 0px 25px;
+     width: 695px;
+     padding: 0px;
+     display: inline-block;
+}
+.search-form .form-group {
+    display: inline-block;
+    width: 250px;
+    margin: 5px 15px;
+}
